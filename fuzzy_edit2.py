@@ -2,12 +2,10 @@ import skfuzzy as fuzz
 import numpy as np
 import cv2
 import csv
-import matplotlib.pyplot as plt
-import matplotlib.font_manager as fm
 from sklearn.cluster import KMeans
 
 # 사용자 그림 이미지
-image = cv2.imread("img/1 (1).jpg")
+image = cv2.imread("img/test1.jpg")
 
 # 채널을 BGR -> RGB로 변경
 image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
@@ -16,8 +14,7 @@ image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 image = image.reshape((image.shape[0] * image.shape[1], 3))
 
 # k-mean 알고리즘으로 이미지를 학습시킨다.
-# k = 2
-k = 5
+k = 4
 clt = KMeans(n_clusters = k)
 clt.fit(image)
 
@@ -91,25 +88,25 @@ R1 = fuzz.trapmf(h, [0, 0, 5, 10])
 O1 = fuzz.trapmf(h, [5, 10, 35, 50])
 Y1 = fuzz.trapmf(h, [35, 50, 70, 85])
 G1 = fuzz.trapmf(h, [70, 85, 160, 165])
-B1 = fuzz.trapmf(h, [160, 165, 265, 280])
-P1 = fuzz.trapmf(h, [265, 280, 315, 330])
+B1 = fuzz.trapmf(h, [160, 165, 250, 265])
+P1 = fuzz.trapmf(h, [250, 265, 315, 330])
 R1_1 = fuzz.trapmf(h, [315, 330, 360, 360])
 
-LS = fuzz.trapmf(s, [0, 0, 15, 40])
-HS = fuzz.trapmf(s, [15, 40, 100, 100])
+LS = fuzz.trapmf(s, [0, 0, 15, 55])
+HS = fuzz.trapmf(s, [15, 55, 100, 100])
 
-LV = fuzz.trapmf(v, [0, 0, 10, 20])
-MV = fuzz.trapmf(v, [10, 20, 60, 75])
-HV = fuzz.trapmf(v, [60, 75, 100, 100])
+LV = fuzz.trapmf(v, [0, 0, 10, 35])
+MV = fuzz.trapmf(v, [10, 30, 60, 75])
+HV = fuzz.trapmf(v, [55, 75, 100, 100])
 
-BLACK = fuzz.trapmf(pc, [0, 0, 4, 6])
-GRAY = fuzz.trapmf(pc, [4, 6, 15, 20])
-RED = fuzz.trapmf(pc, [20, 25, 35, 40])
-ORANGE = fuzz.trapmf(pc, [35, 40, 50, 55])
-YELLOW = fuzz.trapmf(pc, [50, 55, 65, 70])
-GREEN = fuzz.trapmf(pc, [65, 70, 80, 82])
-BLUE = fuzz.trapmf(pc, [80, 82, 90, 93])
-PURPLE = fuzz.trapmf(pc, [90, 93, 100, 100])
+BLACK = fuzz.trapmf(pc, [0, 0, 4, 7])
+GRAY = fuzz.trapmf(pc, [4, 7, 15, 20])
+RED = fuzz.trapmf(pc, [20, 22, 33, 35])
+ORANGE = fuzz.trapmf(pc, [33, 40, 50, 55])
+YELLOW = fuzz.trapmf(pc, [50, 52, 60, 63])
+GREEN = fuzz.trapmf(pc, [60, 63, 72, 75])
+BLUE = fuzz.trapmf(pc, [72, 75, 86, 90])
+PURPLE = fuzz.trapmf(pc, [86, 90, 100, 100])
 
 ##################### 퍼지화하는 멤버십 함수 #####################
 def hMemfunc(h_val):
@@ -145,60 +142,33 @@ print(f"주조색 Saturaiton 영역 소속값: {s1_dict}")
 vL, vM, vH, v1_dict = vMemfunc(v1)
 print(f"주조색 Value 영역 소속값: {v1_dict}\n")
 
-# 그래프 총 6개
-fig, (ax0, ax1, ax2, ax3, ax4, ax5) = plt.subplots(nrows=6, figsize=(8, 15))
-
-# h1(색상) 그래프
-ax0.plot(h, R1, color='red', linewidth=1.5, label='RED')
-ax0.plot(h, O1, color='darkorange', linewidth=1.5, label='ORANGE')
-ax0.plot(h, Y1, color='yellow', linewidth=1.5, label='YELLOW')
-ax0.plot(h, G1, color='limegreen', linewidth=1.5, label='GREEN')
-ax0.plot(h, B1, color='blue', linewidth=1.5, label='BLUE')
-ax0.plot(h, P1, color='darkviolet', linewidth=1.5, label='PURPLE')
-ax0.plot(h, R1_1, color='red', linewidth=1.5, label='RED')
-ax0.set_title('Hue')
-ax0.legend()
-
-# s1(채도) 그래프
-ax1.plot(s, LS, 'b', linewidth=1.5, label='LS')
-ax1.plot(s, HS, 'r', linewidth=1.5, label='HS')
-ax1.set_title('Saturation')
-ax1.legend()
-
-# v1(명도) 그래프
-ax2.plot(v, LV, 'b', linewidth=1.5, label='LV')
-ax2.plot(v, MV, 'g', linewidth=1.5, label='MV')
-ax2.plot(v, HV, 'r', linewidth=1.5, label='HV')
-ax2.set_title('Value')
-ax2.legend()
-
-# pc(주조색) 그래프
-ax3.plot(pc, BLACK, color='black', linewidth=1.5, label='BLACK')
-ax3.plot(pc, GRAY, color='gray', linewidth=1.5, label='GRAY')
-ax3.plot(pc, RED, color='red', linewidth=1.5, label='RED')
-ax3.plot(pc, ORANGE, color='darkorange', linewidth=1.5, label='ORANGE')
-ax3.plot(pc, YELLOW, color='yellow', linewidth=1.5, label='YELLOW')
-ax3.plot(pc, GREEN, color='limegreen', linewidth=1.5, label='GREEN')
-ax3.plot(pc, BLUE, color='blue', linewidth=1.5, label='BLUE')
-ax3.plot(pc, PURPLE, color='darkviolet', linewidth=1.5, label='PURPLE')
-ax3.set_title('Primary Color')
-ax3.legend()
-
 # 규칙1: IF s is sL AND v is vL THEN pc is BLACK
-PC1_rule1 = max(sL, vL)  # 규칙 1: 계산용
+PC1_rule1 = min(sL, vL)  # 규칙 1: 계산용
 gr1_rule1 = np.fmin(PC1_rule1, BLACK)  # 규칙 1: 그래프용
 
 # 규칙2: IF s is sL AND v is vM THEN pc is GRAY
 PC1_rule2 = min(sL, vM)  # 규칙 2: 계산용
 gr1_rule2 = np.fmin(PC1_rule2, GRAY)  # 규칙 2: 그래프용
 
+# 규칙2-1: IF s is sL AND v is vH THEN pc is GRAY
+PC1_rule2_1 = min(sL, vH)  # 규칙 2_1: 계산용
+gr1_rule2_1 = np.fmin(PC1_rule2_1, GRAY)  # 규칙 2_1: 그래프용
+
 # 규칙3: IF h is hR1 AND s is sH AND v is vH THEN pc is RED
 PC1_rule3 = min(hR1, sH, vH)  # 규칙 3: 계산용
 gr1_rule3 = np.fmin(PC1_rule3, RED)  # 규칙 3: 그래프용
 
 # 규칙3-1: IF h is hR1_1 AND s is sH AND v is vH THEN pc is RED
-PC1_rule3_1 = min(hR1_1, sH, vH)  # 규칙 3-1: 계산용
-gr1_rule3_1 = np.fmin(PC1_rule3_1, RED)  # 규칙 3-1: 그래프용
+PC1_rule3_1 = min(hR1_1, sH, vH)  # 규칙 3: 계산용
+gr1_rule3_1 = np.fmin(PC1_rule3_1, RED)  # 규칙 3: 그래프용
+
+# 규칙3-2: IF h is hR1 AND s is sH AND v is vM THEN pc is RED
+PC1_rule3_2 = min(hR1, sH, vM)  # 규칙 3-2: 계산용
+gr1_rule3_2 = np.fmin(PC1_rule3_2, RED)  # 규칙 3-2: 그래프용
+
+# 규칙3-3: IF h is hR1_1 AND s is sH AND v is vM THEN pc is RED
+PC1_rule3_3 = min(hR1_1, sH, vM)  # 규칙 3-3: 계산용
+gr1_rule3_3 = np.fmin(PC1_rule3_3, RED)  # 규칙 3-3: 그래프용
 
 # 규칙4: IF h is hO1 AND s is sH AND v is vH THEN pc is ORANGE
 PC1_rule4 = min(hO1, sH, vH)  # 규칙 4: 계산용
@@ -216,6 +186,10 @@ gr1_rule6 = np.fmin(PC1_rule6, GREEN)  # 규칙 6: 그래프용
 PC1_rule6_1 = min(hG1, sH, vM)  # 규칙 6-1: 계산용
 gr1_rule6_1 = np.fmin(PC1_rule6_1, GREEN)  # 규칙 6-1: 그래프용
 
+# 규칙6-2: IF h is hG1 AND s is sL AND v is vH THEN pc is GREEN
+PC1_rule6_2 = min(hG1, sL, vH)  # 규칙 6-2: 계산용
+gr1_rule6_2 = np.fmin(PC1_rule6_2, GREEN)  # 규칙 6-2: 그래프용
+
 # 규칙7: IF h is hB1 AND s is sH AND v is vH THEN pc is BLUE
 PC1_rule7 = min(hB1, sH, vH)  # 규칙 7: 계산용
 gr1_rule7 = np.fmin(PC1_rule7, BLUE)  # 규칙 7: 그래프용
@@ -232,67 +206,13 @@ gr1_rule8 = np.fmin(PC1_rule8, PURPLE)  # 규칙 8: 그래프용
 PC1_rule8_1 = min(hP1, sH, vM)  # 규칙 8: 계산용
 gr1_rule8_1 = np.fmin(PC1_rule8_1, PURPLE)  # 규칙 8: 그래프용
 
-pc0 = np.zeros_like(pc)
-
-# 규칙 평가 합산 그래프
-ax4.fill_between(pc, pc0, gr1_rule1, facecolor='b', alpha=0.7)
-ax4.plot(pc, BLACK, color='black', linewidth=0.5, linestyle='--', )
-ax4.fill_between(pc, pc0, gr1_rule2, facecolor='b', alpha=0.7)
-ax4.plot(pc, GRAY, color='gray', linewidth=0.5, linestyle='--', )
-ax4.fill_between(pc, pc0, gr1_rule3, facecolor='b', alpha=0.7)
-ax4.plot(pc, RED, color='red', linewidth=0.5, linestyle='--', )
-ax4.fill_between(pc, pc0, gr1_rule4, facecolor='b', alpha=0.7)
-ax4.plot(pc, ORANGE, color='darkorange', linewidth=0.5, linestyle='--')
-ax4.fill_between(pc, pc0, gr1_rule5, facecolor='b', alpha=0.7)
-ax4.plot(pc, YELLOW, color='yellow', linewidth=0.5, linestyle='--')
-ax4.fill_between(pc, pc0, gr1_rule6, facecolor='b', alpha=0.7)
-ax4.plot(pc, GREEN, color='limegreen', linewidth=0.5, linestyle='--')
-ax4.fill_between(pc, pc0, gr1_rule7, facecolor='b', alpha=0.7)
-ax4.plot(pc, BLUE, color='blue', linewidth=0.5, linestyle='--')
-ax4.fill_between(pc, pc0, gr1_rule8, facecolor='b', alpha=0.7)
-ax4.plot(pc, PURPLE, color='darkviolet', linewidth=0.5, linestyle='--')
-ax4.set_title('Rule evaluation')
-
 # 규칙 후건의 통합 : 그래프용
-aggregated1 = np.fmax(gr1_rule1, np.fmax(gr1_rule2, np.fmax(gr1_rule3, np.fmax(gr1_rule3_1, np.fmax(gr1_rule4, np.fmax(gr1_rule5, np.fmax(gr1_rule6, np.fmax(gr1_rule6_1,np.fmax(gr1_rule7, np.fmax(gr1_rule7_1, np.fmax(gr1_rule8, gr1_rule8_1)))))))))))
+aggregated1 = np.fmax(gr1_rule1, np.fmax(gr1_rule2, np.fmax(gr1_rule2_1, np.fmax(gr1_rule3, np.fmax(gr1_rule3_1, np.fmax(gr1_rule3_2, np.fmax(gr1_rule3_3, np.fmax(gr1_rule4, np.fmax(gr1_rule5, np.fmax(gr1_rule6, np.fmax(gr1_rule6_1, np.fmax(gr1_rule6_2, np.fmax(gr1_rule7, np.fmax(gr1_rule7_1, np.fmax(gr1_rule8, gr1_rule8_1)))))))))))))))
 
 pc1 = fuzz.defuzz(pc, aggregated1, 'centroid')
 
 print("******주조색 역퍼지값******")
 print(f"주조색 역퍼지화 값: {pc1}\n")
-
-# 역퍼지화 그래프
-z_activation = fuzz.interp_membership(pc, aggregated1, pc1)
-ax5.plot(pc, BLACK, color='black', linewidth=0.5, linestyle='--')
-ax5.plot(pc, GRAY, color='gray', linewidth=0.5, linestyle='--')
-ax5.plot(pc, RED, color='red', linewidth=0.5, linestyle='--')
-ax5.plot(pc, ORANGE, color='darkorange', linewidth=0.5, linestyle='--')
-ax5.plot(pc, YELLOW, color='yellow', linewidth=0.5, linestyle='--')
-ax5.plot(pc, GREEN, color='limegreen', linewidth=0.5, linestyle='--')
-ax5.plot(pc, BLUE, color='blue', linewidth=0.5, linestyle='--')
-ax5.plot(pc, PURPLE, color='darkviolet', linewidth=0.5, linestyle='--')
-ax5.fill_between(pc, pc0, aggregated1, facecolor='pink', alpha=0.8)
-ax5.plot([pc1, pc1], [0, z_activation], 'k', linewidth=1.5, label='Input(PC1)={:.2f}'.format(pc1), alpha=0.9)
-ax5.legend()
-ax5.set_title('Defuzzification')
-
-# 그래프 최종 시각화
-ax0.spines['top'].set_visible(False)
-ax0.spines['right'].set_visible(False)
-ax0.get_xaxis().tick_bottom()
-ax0.get_yaxis().tick_left()
-ax0.set_ylim([0, 1])
-ax0.set_xlim([0, 355])
-ax0.set_xticks([i for i in range(0, 356, 50)])
-
-for ax in (ax1, ax2, ax3, ax4, ax5):
-    ax.spines['top'].set_visible(False)
-    ax.spines['right'].set_visible(False)
-    ax.get_xaxis().tick_bottom()
-    ax.get_yaxis().tick_left()
-    ax.set_ylim([0, 1])
-    ax.set_xlim([0, 100])
-    ax.set_xticks([i for i in range(0, 101, 10)])
 
 # 보조색 멤버십 함수 대응값
 print("******보조색 HSV 멤버십 함수 소속값******")
@@ -305,33 +225,41 @@ print(f"보조색 Saturation 영역 소속값: {s2_dict}")
 vL2, vM2, vH2, v2_dict = vMemfunc(v2)
 print(f"보조색 Value 영역 소속값: {v2_dict}\n")
 
-DC1_rule1 = max(sL2, vL2)
+DC1_rule1 = min(sL2, vL2)
 DC1_rule2 = min(sL2, vM2)
+DC1_rule2_1 = min(sL2, vH2)
 DC1_rule3 = min(hR2, sH2, vH2)
 DC1_rule3_1 = min(hR2_1, sH2, vH2)
+DC1_rule3_2 = min(hR2, sH2, vM2)
+DC1_rule3_3 = min(hR2_1, sH2, vM2)
 DC1_rule4 = min(hO2, sH2, vH2)
 DC1_rule5 = min(hY2, sH2, vH2)
 DC1_rule6 = min(hG2, sH2, vH2)
-DC1_rule6_1 = min(hG1, sH, vM)
+DC1_rule6_1 = min(hG2, sH2, vM2)
+DC1_rule6_2 = min(hG2, sL2, vH2)
 DC1_rule7 = min(hB2, sH2, vH2)
-DC1_rule7_1 = min(hB1, sH, vM)
+DC1_rule7_1 = min(hB2, sH2, vM2)
 DC1_rule8 = min(hP2, sH2, vH2)
-DC1_rule8_1 = min(hP1, sH, vM)
+DC1_rule8_1 = min(hP2, sH2, vM2)
 
 gr2_rule1 = np.fmin(DC1_rule1, BLACK)
 gr2_rule2 = np.fmin(DC1_rule2, GRAY)
+gr2_rule2_1 = np.fmin(DC1_rule2_1, GRAY)
 gr2_rule3 = np.fmin(DC1_rule3, RED)
 gr2_rule3_1 = np.fmin(DC1_rule3_1, RED)
+gr2_rule3_2 = np.fmin(DC1_rule3_2, RED)
+gr2_rule3_3 = np.fmin(DC1_rule3_3, RED)
 gr2_rule4 = np.fmin(DC1_rule4, ORANGE)
 gr2_rule5 = np.fmin(DC1_rule5, YELLOW)
 gr2_rule6 = np.fmin(DC1_rule6, GREEN)
 gr2_rule6_1 = np.fmin(PC1_rule6_1, GREEN)
+gr2_rule6_2 = np.fmin(PC1_rule6_2, GREEN)
 gr2_rule7 = np.fmin(DC1_rule7, BLUE)
 gr2_rule7_1 = np.fmin(PC1_rule7_1, BLUE)
 gr2_rule8 = np.fmin(DC1_rule8, PURPLE)
 gr2_rule8_1 = np.fmin(PC1_rule8_1, PURPLE)
 
-aggregated2 = np.fmax(gr2_rule1, np.fmax(gr2_rule2, np.fmax(gr2_rule3, np.fmax(gr2_rule3_1, np.fmax(gr2_rule4, np.fmax(gr2_rule5, np.fmax(gr2_rule6, np.fmax(gr2_rule6_1, np.fmax(gr2_rule7,  np.fmax(gr2_rule7_1, np.fmax(gr2_rule8, gr2_rule8_1)))))))))))
+aggregated2 = np.fmax(gr2_rule1, np.fmax(gr2_rule2, np.fmax(gr2_rule2_1, np.fmax(gr2_rule3, np.fmax(gr2_rule3_1, np.fmax(gr2_rule3_2, np.fmax(gr2_rule3_3, np.fmax(gr2_rule4, np.fmax(gr2_rule5, np.fmax(gr2_rule6, np.fmax(gr2_rule6_1, np.fmax(gr2_rule7,  np.fmax(gr2_rule7_1, np.fmax(gr2_rule8, gr2_rule8_1))))))))))))))
 
 dc1 = fuzz.defuzz(dc, aggregated2, 'centroid')
 #dc1 = (DC1_rule1 + (10 + 20) * DC1_rule2 + 30 * DC1_rule3 + (40 + 50) * DC1_rule4 + 60 * DC1_rule5 + (70 + 80) * DC1_rule6 + 90 * DC1_rule7 + 100 * DC1_rule8) \
@@ -344,216 +272,216 @@ print(f"보조색 역퍼지화 값: {dc1}\n")
 def rstColor(c1, c2):
     cc = []
     # 주조색: 검정
-    if ((c1 >= 0) and (c1 < 6)):
+    if ((c1 >= 0) and (c1 < 8)):
         cc.append('검정')
-        if ((c2 >= 6) and (c2 < 21)):  # 보조색: 회색
+        if ((c2 >= 8) and (c2 < 20)):  # 보조색: 회색
             cc.append('회색')
             cc.append('노랑')
-        elif ((c2 >= 21) and (c2 < 38)):  # 보조색: 빨강
+        elif ((c2 >= 20) and (c2 < 36)):  # 보조색: 빨강
             cc.append('빨강')
             cc.append('파랑')
-        elif ((c2 >= 38) and (c2 < 53)):  # 보조색: 주황
+        elif ((c2 >= 36) and (c2 < 51)):  # 보조색: 주황
             cc.append('주황')
             cc.append('초록')
-        elif ((c2 >= 53) and (c2 < 67)):  # 보조색: 노랑
+        elif ((c2 >= 51) and (c2 < 64)):  # 보조색: 노랑
             cc.append('노랑')
             cc.append('파랑')
-        elif ((c2 >= 67) and (c2 < 82)):  # 보조색: 초록
+        elif ((c2 >= 64) and (c2 < 76)):  # 보조색: 초록
             cc.append('초록')
             cc.append('파랑')
-        elif ((c2 >= 82) and (c2 < 92)):  # 보조색: 파랑
+        elif ((c2 >= 77) and (c2 < 91)):  # 보조색: 파랑
             cc.append('파랑')
             cc.append('빨강')
-        elif ((c2 >= 92) and (c2 <= 100)):  # 보조색: 보라
+        elif ((c2 >= 91) and (c2 <= 100)):  # 보조색: 보라
             cc.append('보라')
             cc.append('노랑')
         else:
             print('주조색과 보조색이 같음')
 
     # 주조색: 회색
-    elif ((c1 >= 6) and (c1 < 21)):
+    elif ((c1 >= 8) and (c1 < 20)):
         cc.append('회색')
-        if ((c2 >= 0) and (c2 < 6)):  # 보조색: 검정
+        if ((c2 >= 0) and (c2 < 8)):  # 보조색: 검정
             cc.append('검정')
             cc.append('노랑')
-        elif ((c2 >= 21) and (c2 < 38)):  # 보조색: 빨강
+        elif ((c2 >= 20) and (c2 < 36)):  # 보조색: 빨강
             cc.append('빨강')
             cc.append('노랑')
-        elif ((c2 >= 38) and (c2 < 53)):  # 보조색: 주황
+        elif ((c2 >= 36) and (c2 < 51)):  # 보조색: 주황
             cc.append('주황')
             cc.append('빨강')
-        elif ((c2 >= 53) and (c2 < 67)):  # 보조색: 노랑
+        elif ((c2 >= 51) and (c2 < 64)):  # 보조색: 노랑
             cc.append('노랑')
             cc.append('주황')
-        elif ((c2 >= 67) and (c2 < 82)):  # 보조색: 초록
+        elif ((c2 >= 64) and (c2 < 76)):  # 보조색: 초록
             cc.append('초록')
             cc.append('빨강')
-        elif ((c2 >= 82) and (c2 < 92)):  # 보조색: 파랑
+        elif ((c2 >= 77) and (c2 < 91)):  # 보조색: 파랑
             cc.append('파랑')
             cc.append('노랑')
-        elif ((c2 >= 92) and (c2 <= 100)):  # 보조색: 보라
+        elif ((c2 >= 91) and (c2 <= 100)):  # 보조색: 보라
             cc.append('보라')
             cc.append('초록')
         else:
             print('주조색과 보조색이 같음')
 
     # 주조색: 빨강
-    elif ((c1 >= 21) and (c1 < 38)):
+    elif ((c1 >= 20) and (c1 < 36)):
         cc.append('빨강')
-        if ((c2 >= 0) and (c2 < 6)):  # 보조색: 검정
+        if ((c2 >= 0) and (c2 < 8)):  # 보조색: 검정
             cc.append('검정')
             cc.append('파랑')
-        elif ((c2 >= 6) and (c2 < 21)):  # 보조색: 회색
+        elif ((c2 >= 8) and (c2 < 20)):  # 보조색: 회색
             cc.append('회색')
             cc.append('노랑')
-        elif ((c2 >= 38) and (c2 < 53)):  # 보조색: 주황
+        elif ((c2 >= 36) and (c2 < 51)):  # 보조색: 주황
             cc.append('주황')
             cc.append('초록')
-        elif ((c2 >= 53) and (c2 < 67)):  # 보조색: 노랑
+        elif ((c2 >= 51) and (c2 < 64)):  # 보조색: 노랑
             cc.append('노랑')
             cc.append('파랑')
-        elif ((c2 >= 67) and (c2 < 82)):  # 보조색: 초록
+        elif ((c2 >= 64) and (c2 < 76)):  # 보조색: 초록
             cc.append('초록')
             cc.append('보라')
-        elif ((c2 >= 82) and (c2 < 92)):  # 보조색: 파랑
+        elif ((c2 >= 77) and (c2 < 91)):  # 보조색: 파랑
             cc.append('파랑')
             cc.append('초록')
-        elif ((c2 >= 92) and (c2 <= 100)):  # 보조색: 보라
+        elif ((c2 >= 91) and (c2 <= 100)):  # 보조색: 보라
             cc.append('보라')
             cc.append('검정')
         else:
             print('주조색과 보조색이 같음')
 
     # 주조색: 주황
-    elif ((c1 >= 38) and (c1 < 53)):
+    elif ((c1 >= 36) and (c1 < 51)):
         cc.append('주황')
-        if ((c2 >= 0) and (c2 < 6)):  # 보조색: 검정
+        if ((c2 >= 0) and (c2 < 8)):  # 보조색: 검정
             cc.append('검정')
             cc.append('초록')
-        elif ((c2 >= 6) and (c2 < 21)):  # 보조색: 회색
+        elif ((c2 >= 8) and (c2 < 20)):  # 보조색: 회색
             cc.append('회색')
             cc.append('빨강')
-        elif ((c2 >= 21) and (c2 < 38)):  # 보조색: 빨강
+        elif ((c2 >= 20) and (c2 < 36)):  # 보조색: 빨강
             cc.append('빨강')
             cc.append('초록')
-        elif ((c2 >= 53) and (c2 < 67)):  # 보조색: 노랑
+        elif ((c2 >= 51) and (c2 < 64)):  # 보조색: 노랑
             cc.append('노랑')
             cc.append('검정')
-        elif ((c2 >= 67) and (c2 < 82)):  # 보조색: 초록
+        elif ((c2 >= 64) and (c2 < 76)):  # 보조색: 초록
             cc.append('초록')
             cc.append('파랑')
-        elif ((c2 >= 82) and (c2 < 92)):  # 보조색: 파랑
+        elif ((c2 >= 77) and (c2 < 91)):  # 보조색: 파랑
             cc.append('파랑')
             cc.append('보라')
-        elif ((c2 >= 92) and (c2 <= 100)):  # 보조색: 보라
+        elif ((c2 >= 91) and (c2 <= 100)):  # 보조색: 보라
             cc.append('보라')
             cc.append('파랑')
         else:
             print('주조색과 보조색이 같음')
 
     # 주조색: 노랑
-    elif ((c1 >= 53) and (c1 < 67)):
+    elif ((c1 >= 51) and (c1 < 64)):
         cc.append('노랑')
-        if ((c2 >= 0) and (c2 < 6)):  # 보조색: 검정
+        if ((c2 >= 0) and (c2 < 8)):  # 보조색: 검정
             cc.append('검정')
             cc.append('파랑')
-        elif ((c2 >= 6) and (c2 < 21)):  # 보조색: 회색
+        elif ((c2 >= 8) and (c2 < 20)):  # 보조색: 회색
             cc.append('회색')
             cc.append('주황')
-        elif ((c2 >= 21) and (c2 < 38)):  # 보조색: 빨강
+        elif ((c2 >= 20) and (c2 < 36)):  # 보조색: 빨강
             cc.append('빨강')
             cc.append('파랑')
-        elif ((c2 >= 38) and (c2 < 53)):  # 보조색: 주황
+        elif ((c2 >= 36) and (c2 < 51)):  # 보조색: 주황
             cc.append('주황')
             cc.append('검정')
-        elif ((c2 >= 67) and (c2 < 82)):  # 보조색: 초록
+        elif ((c2 >= 64) and (c2 < 76)):  # 보조색: 초록
             cc.append('초록')
             cc.append('검정')
-        elif ((c2 >= 82) and (c2 < 92)):  # 보조색: 파랑
+        elif ((c2 >= 77) and (c2 < 91)):  # 보조색: 파랑
             cc.append('파랑')
             cc.append('보라')
-        elif ((c2 >= 92) and (c2 <= 100)):  # 보조색: 보라
+        elif ((c2 >= 91) and (c2 <= 100)):  # 보조색: 보라
             cc.append('보라')
             cc.append('초록')
         else:
             print('주조색과 보조색이 같음')
 
     # 주조색: 초록
-    elif ((c1 >= 67) and (c1 < 82)):
+    elif ((c1 >= 64) and (c1 < 76)):
         cc.append('초록')
-        if ((c2 >= 0) and (c2 < 6)):  # 보조색: 검정
+        if ((c2 >= 0) and (c2 < 8)):  # 보조색: 검정
             cc.append('검정')
             cc.append('파랑')
-        elif ((c2 >= 6) and (c2 < 21)):  # 보조색: 회색
+        elif ((c2 >= 8) and (c2 < 20)):  # 보조색: 회색
             cc.append('회색')
             cc.append('빨강')
-        elif ((c2 >= 21) and (c2 < 38)):  # 보조색: 빨강
+        elif ((c2 >= 20) and (c2 < 36)):  # 보조색: 빨강
             cc.append('빨강')
             cc.append('보라')
-        elif ((c2 >= 38) and (c2 < 53)):  # 보조색: 주황
+        elif ((c2 >= 36) and (c2 < 51)):  # 보조색: 주황
             cc.append('주황')
             cc.append('파랑')
-        elif ((c2 >= 53) and (c2 < 67)):  # 보조색: 노랑
+        elif ((c2 >= 51) and (c2 < 64)):  # 보조색: 노랑
             cc.append('노랑')
             cc.append('검정')
-        elif ((c2 >= 82) and (c2 < 92)):  # 보조색: 파랑
+        elif ((c2 >= 77) and (c2 < 91)):  # 보조색: 파랑
             cc.append('파랑')
             cc.append('빨강')
-        elif ((c2 >= 92) and (c2 <= 100)):  # 보조색: 보라
+        elif ((c2 >= 91) and (c2 <= 100)):  # 보조색: 보라
             cc.append('보라')
             cc.append('빨강')
         else:
             print('주조색과 보조색이 같음')
 
     # 주조색: 파랑
-    elif ((c1 >= 82) and (c1 < 92)):
+    elif ((c1 >= 77) and (c1 < 91)):
         cc.append('파랑')
-        if ((c2 >= 0) and (c2 < 6)):  # 보조색: 검정
+        if ((c2 >= 0) and (c2 < 8)):  # 보조색: 검정
             cc.append('검정')
             cc.append('빨강')
-        elif ((c2 >= 6) and (c2 < 21)):  # 보조색: 회색
+        elif ((c2 >= 8) and (c2 < 20)):  # 보조색: 회색
             cc.append('회색')
             cc.append('노랑')
-        elif ((c2 >= 21) and (c2 < 38)):  # 보조색: 빨강
+        elif ((c2 >= 20) and (c2 < 36)):  # 보조색: 빨강
             cc.append('빨강')
             cc.append('초록')
-        elif ((c2 >= 38) and (c2 < 53)):  # 보조색: 주황
+        elif ((c2 >= 36) and (c2 < 51)):  # 보조색: 주황
             cc.append('주황')
             cc.append('보라')
-        elif ((c2 >= 53) and (c2 < 67)):  # 보조색: 노랑
+        elif ((c2 >= 51) and (c2 < 64)):  # 보조색: 노랑
             cc.append('노랑')
             cc.append('보라')
-        elif ((c2 >= 67) and (c2 < 82)):  # 보조색: 초록
+        elif ((c2 >= 64) and (c2 < 76)):  # 보조색: 초록
             cc.append('초록')
             cc.append('빨강')
-        elif ((c2 >= 92) and (c2 <= 100)):  # 보조색: 보라
+        elif ((c2 >= 91) and (c2 <= 100)):  # 보조색: 보라
             cc.append('보라')
             cc.append('주황')
         else:
             print('주조색과 보조색이 같음')
 
     # 주조색: 보라
-    elif ((c1 >= 92) and (c1 <= 100)):
+    elif ((c1 >= 91) and (c1 <= 100)):
         cc.append('보라')
-        if ((c2 >= 0) and (c2 < 6)):  # 보조색: 검정
+        if ((c2 >= 0) and (c2 < 8)):  # 보조색: 검정
             cc.append('검정')
             cc.append('노랑')
-        elif ((c2 >= 6) and (c2 < 21)):  # 보조색: 회색
+        elif ((c2 >= 8) and (c2 < 20)):  # 보조색: 회색
             cc.append('회색')
             cc.append('초록')
-        elif ((c2 >= 21) and (c2 < 38)):  # 보조색: 빨강
+        elif ((c2 >= 20) and (c2 < 36)):  # 보조색: 빨강
             cc.append('빨강')
             cc.append('검정')
-        elif ((c2 >= 38) and (c2 < 53)):  # 보조색: 주황
+        elif ((c2 >= 36) and (c2 < 51)):  # 보조색: 주황
             cc.append('주황')
             cc.append('파랑')
-        elif ((c2 >= 53) and (c2 < 67)):  # 보조색: 노랑
+        elif ((c2 >= 51) and (c2 < 64)):  # 보조색: 노랑
             cc.append('노랑')
             cc.append('초록')
-        elif ((c2 >= 67) and (c2 < 82)):  # 보조색: 초록
+        elif ((c2 >= 64) and (c2 < 76)):  # 보조색: 초록
             cc.append('초록')
             cc.append('빨강')
-        elif ((c2 >= 82) and (c2 < 92)):  # 보조색: 파랑
+        elif ((c2 >= 77) and (c2 < 91)):  # 보조색: 파랑
             cc.append('파랑')
             cc.append('주황')
         else:
@@ -566,11 +494,7 @@ print("******주조색과 보조색에 따른 보완색******")
 print(f"주조색: {cc[0]}, 보조색: {cc[1]}, 보완색: {cc[2]}")
 
 # csv 쓰기
-with open('result.csv', 'w', encoding='utf-8', newline='') as csvfile:
-	writer = csv.writer(csvfile)
-	writer.writerow(["주조색", "보조색", "보완색"])
-	writer.writerow(cc)
-
-plt.tight_layout()
-#plt.savefig('img/fig1.jpg')
-plt.show()
+# with open('result.csv', 'w', encoding='utf-8', newline='') as csvfile:
+# 	writer = csv.writer(csvfile)
+# 	writer.writerow(["주조색", "보조색", "보완색"])
+# 	writer.writerow(cc)

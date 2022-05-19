@@ -5,7 +5,7 @@ import csv
 from sklearn.cluster import KMeans
 
 # 사용자 그림 이미지
-image = cv2.imread("img/img3.jpg")
+image = cv2.imread("img/test1.jpg")
 
 # 채널을 BGR -> RGB로 변경
 image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
@@ -78,7 +78,7 @@ print(f"보조색 HSV값: {h2, s2, v2}\n")
 
 # HSV 멤버십 함수
 # h: 색상, s: 채도, v: 명도, pc: 주조색, dc: 보조색
-h = np.arange(0, 356, 1)
+h = np.arange(0, 361, 1)
 s = np.arange(0, 101, 1)
 v = np.arange(0, 101, 1)
 pc = np.arange(0, 101, 1)
@@ -90,7 +90,7 @@ Y1 = fuzz.trapmf(h, [35, 50, 70, 85])
 G1 = fuzz.trapmf(h, [70, 85, 160, 165])
 B1 = fuzz.trapmf(h, [160, 165, 265, 280])
 P1 = fuzz.trapmf(h, [265, 280, 315, 330])
-R1_1 = fuzz.trapmf(h, [315, 330, 355, 355])
+R1_1 = fuzz.trapmf(h, [315, 330, 360, 360])
 
 LS = fuzz.trapmf(s, [0, 0, 15, 40])
 HS = fuzz.trapmf(s, [15, 40, 100, 100])
